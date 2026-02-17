@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import useSWR from 'swr';
+import { Plus } from 'lucide-react';
+import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
 import MetricCard from './MetricCard';
 import InvestmentCard from './InvestmentCard';
 import EmptyState from './EmptyState';
@@ -126,13 +129,20 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1 className="app-title">📊 PortfolioPilot</h1>
-        <button 
-          onClick={() => setIsAddModalOpen(true)} 
-          className="btn-primary"
-        >
-          + Add Investment
-        </button>
+        <div className="dashboard-logo">
+          <Logo size={36} />
+          <h1 className="app-title">PortfolioPilot</h1>
+        </div>
+        <div className="dashboard-actions">
+          <ThemeToggle />
+          <button 
+            onClick={() => setIsAddModalOpen(true)} 
+            className="btn-primary"
+          >
+            <Plus size={20} />
+            Add Investment
+          </button>
+        </div>
       </header>
 
       {isLoading ? (

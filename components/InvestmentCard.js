@@ -1,3 +1,4 @@
+import { Edit2, X, TrendingUp, TrendingDown } from 'lucide-react';
 import { calculateInvestmentMetrics, formatCurrency, formatPercent } from '@/lib/calculations';
 
 export default function InvestmentCard({ investment, onEdit, onDelete }) {
@@ -18,14 +19,14 @@ export default function InvestmentCard({ investment, onEdit, onDelete }) {
             className="btn-icon"
             title="Edit"
           >
-            ✎
+            <Edit2 size={18} />
           </button>
           <button 
             onClick={() => onDelete(investment)} 
             className="btn-icon btn-danger-icon"
             title="Delete"
           >
-            ×
+            <X size={18} />
           </button>
         </div>
       </div>
@@ -49,8 +50,8 @@ export default function InvestmentCard({ investment, onEdit, onDelete }) {
       </div>
 
       <div className={`investment-profit ${metrics.isProfit ? 'profit' : 'loss'}`}>
-        <span>{metrics.isProfit ? '↑' : '↓'}</span>
-        {formatCurrency(Math.abs(metrics.profitLoss))} ({formatPercent(metrics.profitLossPercent)})
+        {metrics.isProfit ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+        <span>{formatCurrency(Math.abs(metrics.profitLoss))} ({formatPercent(metrics.profitLossPercent)})</span>
       </div>
     </div>
   );

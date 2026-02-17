@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 export default function EditInvestmentModal({ isOpen, onClose, onUpdate, investment }) {
   const [formData, setFormData] = useState({
@@ -99,7 +100,9 @@ export default function EditInvestmentModal({ isOpen, onClose, onUpdate, investm
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Edit Investment</h2>
-          <button onClick={onClose} className="modal-close">×</button>
+          <button onClick={onClose} className="modal-close">
+            <X size={24} />
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="modal-form">

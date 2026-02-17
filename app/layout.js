@@ -1,4 +1,5 @@
 import './globals.css';
+import ClientProviders from '@/components/ClientProviders';
 
 export const metadata = {
   title: 'PortfolioPilot - Investment Tracker',
@@ -8,7 +9,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ClientProviders>
+          {children}
+        </ClientProviders>
+      </body>
     </html>
   );
 }

@@ -1,3 +1,5 @@
+import { X, AlertTriangle } from 'lucide-react';
+
 export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, investment, isDeleting }) {
   if (!isOpen) return null;
 
@@ -6,10 +8,15 @@ export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, investm
       <div className="modal-content modal-confirm" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Confirm Delete</h2>
-          <button onClick={onClose} className="modal-close">×</button>
+          <button onClick={onClose} className="modal-close">
+            <X size={24} />
+          </button>
         </div>
 
         <div className="modal-body">
+          <div className="modal-alert">
+            <AlertTriangle size={48} />
+          </div>
           <p>
             Are you sure you want to delete <strong>{investment?.stockSymbol}</strong>?
           </p>

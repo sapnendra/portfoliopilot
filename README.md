@@ -1,12 +1,17 @@
 # 📊 PortfolioPilot - Personal Investment Tracker
 
-A clean, modern web application for tracking stock and IPO investments. Built with Next.js and MongoDB.
+A clean, modern web application for tracking stock and IPO investments. Built with Next.js and MongoDB, with support for Indian Rupee (₹) currency formatting.
 
 ## ✨ Features
 
-- **Portfolio Dashboard** - View total invested, current value, profit/loss, and return percentage
-- **Investment Tracking** - Add, edit, and delete investments
+- **Landing Page** - Professional home page with hero section, feature highlights, and call-to-action
+- **Portfolio Dashboard** - View total invested, current value, profit/loss, and return percentage in INR
+- **Investment Tracking** - Add, edit, and delete investments with real-time updates
 - **Real-time Calculations** - Automatic P/L calculations for each investment and overall portfolio
+- **Dark/Light Mode** - Manual theme toggle with dark mode as default, preferences saved to localStorage
+- **Modern Icons** - Lucide React icons throughout the interface for a clean, professional look
+- **Custom Branding** - SVG logo with gradient design symbolizing portfolio growth
+- **Indian Currency Support** - All amounts displayed in Indian Rupee (₹) format
 - **Responsive Design** - Mobile-first approach, works perfectly on all devices
 - **Clean UI** - Modern, professional interface with intuitive navigation
 
@@ -16,7 +21,9 @@ A clean, modern web application for tracking stock and IPO investments. Built wi
 - **Backend**: Next.js API Routes
 - **Database**: MongoDB with Mongoose ODM
 - **Data Fetching**: SWR for real-time updates
-- **Styling**: Custom CSS with mobile-first approach
+- **Icons**: Lucide React for modern, scalable icons
+- **Styling**: Custom CSS with CSS variables for theming
+- **Theme Management**: React Context API with localStorage persistence
 
 ## 📁 Project Structure
 
@@ -25,20 +32,28 @@ portfoliopilot/
 ├── app/
 │   ├── api/
 │   │   └── investments/
-│   │       ├── route.js           # GET, POST endpoints
-│   │       └── [id]/route.js      # GET, PUT, DELETE endpoints
-│   ├── layout.js                  # Root layout
-│   ├── page.js                    # Home page
-│   └── globals.css                # Global styles
+│   │   track/
+│   │   └── page.js                # Dashboard page (/track)
+│   ├── layout.js                  # Root layout with theme provider
+│   ├── page.js                    # Home/landing page (/)
+│   └── globals.css                # Global styles with theme variables
 ├── components/
 │   ├── Dashboard.js               # Main dashboard component
+│   ├── HomePage.js                # Landing page component
+│   ├── Logo.js                    # Custom SVG logo component
+│   ├── ThemeToggle.js             # Dark/light mode toggle button
+│   ├── ClientProviders.js         # Client-side provider wrapper
 │   ├── MetricCard.js              # Portfolio metric display
 │   ├── InvestmentCard.js          # Individual investment card
 │   ├── AddInvestmentModal.js      # Add investment form
 │   ├── EditInvestmentModal.js     # Edit investment form
 │   ├── DeleteConfirmModal.js      # Delete confirmation
 │   └── EmptyState.js              # Empty state view
+├── contexts/
+│   └── ThemeContext.js            # Theme management context
 ├── lib/
+│   ├── mongodb.js                 # MongoDB connection
+│   └── calculations.js            # P/L calculation utilities (INR)
 │   ├── mongodb.js                 # MongoDB connection
 │   └── calculations.js            # P/L calculation utilities
 ├── models/
@@ -81,20 +96,36 @@ portfoliopilot/
    
    Edit `.env.local` file and add your MongoDB URI:
    ```env
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfoliopilot
-   ```
-
-5. **Run the development server**
+   MORun the development server**
    ```bash
    npm run dev
    ```
 
-6. **Open your browser**
+7. **Open your browser**
    
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   Navigate to [http://localhost:3000](http://localhost:3000) for the home page
+   
+   Or go directly to [http://localhost:3000/track](http://localhost:3000/track) for the dashboard
 
 ## 📱 Usage
 
+### Navigating the App
+
+- **Home Page** (`/`) - Landing page with overview and call-to-action to start tracking
+- **Dashboard** (`/track`) - Main investment tracking interface with all your investments
+
+### Theme Toggle
+
+Click the **Sun/Moon icon** in the top right to switch between dark and light modes. Your preference is automatically saved.
+   npm run devEdit icon** button on any investment card
+2. Update the fields you want to change
+3. Click "**Save Changes**"
+
+**Pro Tip**: Most often you'll want to update the **Current Price** to recalculate your profit/loss.
+
+### Deleting an Investment
+
+1. Click the **X icon
 ### Adding an Investment
 
 1. Click the "**+ Add Investment**" button
@@ -120,31 +151,46 @@ portfoliopilot/
 
 1. Click the **× (delete)** button on any investment card
 2. Confirm the deletion in the modal
-3. The investment will be permanently removed
-
-## 🧮 How It Works
-
-### Portfolio Metrics
-
-The dashboard displays four key metrics at the top:
-
-1. **Total Invested** = Sum of (quantity × purchase price) for all investments
-2. **Current Value** = Sum of (quantity × current price) for all investments
-3. **Total P/L** = Current Value - Total Invested
-4. **Return %** = (Total P/L / Total Invested) × 100
-
-### Per-Investment Calculations
-
-Each investment card shows:
-- **Invested Amount** = quantity × purchase price
-- **Current Value** = quantity × current price
-- **Profit/Loss** = Current Value - Invested Amount
+3. The investment will be permanently removed (in ₹)
+- **Current Value** = quantity × current price (in ₹)
+- **Profit/Loss** = Current Value - Invested Amount (in ₹)
 - **P/L Percentage** = (Profit/Loss / Invested Amount) × 100
 
-Colors:
-- 🟢 **Green** = Profit
-- 🔴 **Red** = Loss
+**Visual Indicators**:
+- 🟢 **Green** with up arrow icon = Profit
+- 🔴 **Red** with down arrow icon = Loss
 
+**Currency Format**: All amounts are displayed in Indian Rupee format (e.g., ₹2,50,000)
+1. **Total Invested** = Sum of (quantity × purchase price) for all investments
+2. *Dual Theme Support**
+  - **Dark Mode** (default): Dark background with light text
+  - **Light Mode**: Light background with dark text
+  - Manual toggle with preference saved locally
+  - CSS variables for seamless theme switching
+
+- **Mobile-First Responsive Design**
+  - Single column on mobile (< 640px)
+  - 2 columns on tablet (640px - 1024px)
+  - 3-4 columns on desktop (> 1024px)
+
+- **Professional Branding**
+  - Custom SVG logo with gradient effect
+  - Cohesive color scheme across all pages
+  - Modern Lucide React icons throughout
+
+- **Dynamic Color Scheme**
+  - **Dark Theme**: Rich dark backgrounds (#0f172a) with blue accents
+  - **Light Theme**: Clean white backgrounds with subtle grays
+  - Primary: Blue gradient (#3b82f6 to #8b5cf6)
+  - Success: Green (#10b981)
+  - Danger: Red (#ef4444)
+
+- **Smooth Interactions**
+  - Hover effects on cards and buttons
+  - Modal animations (slide-in/fade)
+  - Toast notifications for user feedback
+  - Loading states with proper UX
+  - Floating animation on home page visual card
 ## 🎨 Design Features
 
 - **Mobile-First Responsive Design**
@@ -212,14 +258,16 @@ The app can be deployed to any platform that supports Next.js:
 - Ensure MongoDB Atlas whitelist includes your IP
 - Verify MongoDB cluster is running
 
-### Module not found errors
-
-- Run `npm install` to ensure all dependencies are installed
-- Delete `.next` folder and restart: `rm -rf .next && npm run dev`
-
-### Styles not loading
-
-- Clear browser cache
+### Module not found errorsline chart for historical P/L)
+- 🔍 Search and filter investments by symbol, type, or date range
+- 📄 Export portfolio data to CSV or PDF
+- 📈 Historical price tracking with timeline view
+- 🔔 Price alerts and notifications
+- 💰 Dividend tracking and reinvestment calculations
+- 🌐 Multi-currency support beyond INR
+- 👤 User authentication for multi-user support
+- 📱 PWA support for mobile app-like experience
+- 🔄 Auto-sync with live stock prices via API integration
 - Check that `globals.css` is imported in `layout.js`
 - Restart development server
 
