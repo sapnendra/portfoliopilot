@@ -249,8 +249,21 @@ export default function HomePage() {
               <span className="footer-brand-name">PortfolioPilot</span>
               <p className="footer-tagline">Smart investment tracking for modern investors</p>
             </div>
-            <div className="footer-copyright">
-              © {new Date().getFullYear()} PortfolioPilot. Built with ❤️ for investors.
+            <div className="footer-right">
+              <div className="footer-copyright">
+                © {new Date().getFullYear()} PortfolioPilot. Built with ❤️ for investors.
+              </div>
+              <div className="footer-developer">
+                Website developed by{' '}
+                <a 
+                  href="https://github.com/sapnendra" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="developer-link"
+                >
+                  Sapnendra Jaiswal
+                </a>
+              </div>
             </div>
           </div>
         </div>
