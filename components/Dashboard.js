@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
 import { Plus } from 'lucide-react';
@@ -12,6 +12,7 @@ import EmptyState from './EmptyState';
 import AddInvestmentModal from './AddInvestmentModal';
 import EditInvestmentModal from './EditInvestmentModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import FilterSortBar from './FilterSortBar';
 import { calculatePortfolioMetrics, formatCurrency, formatPercent } from '@/lib/calculations';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -25,14 +26,71 @@ export default function Dashboard() {
   const [selectedInvestment, setSelectedInvestment] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [toast, setToast] = useState(null);
+  
+  // Filter and Sort States
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const investments = data?.data || [];
-  const portfolioMetrics = calculatePortfolioMetrics(investments);
+  const allInvestments = data?.data || [];
+  
+  // Filter, Sort, and Search Logic
+  const processedInvestments = useMemo(() => {
+    let filtered = [...allInvestments];
+    
+    // Apply search filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(inv => 
+        inv.stockSymbol?.toLowerCase().includes(term) ||
+        inv.stockName?.toLowerCase().includes(term)
+      );
+    }
+    
+    // Apply type filter
+    if (filterType !== 'all') {
+      filtered = filtered.filter(inv => inv.type === filterType);
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      const aPL = (a.quantity * a.currentPrice) - (a.quantity * a.purchasePrice);
+      const bPL = (b.quantity * b.currentPrice) - (b.quantity * b.purchasePrice);
+      const aInvested = a.quantity * a.purchasePrice;
+      const bInvested = b.quantity * b.purchasePrice;
+      
+      switch (sortBy) {
+        case 'name':
+          return (a.stockSymbol || '').localeCompare(b.stockSymbol || '');
+        case 'name-desc':
+          return (b.stockSymbol || '').localeCompare(a.stockSymbol || '');
+        case 'profit-desc':
+          return bPL - aPL;
+        case 'profit-asc':
+          return aPL - bPL;
+        case 'invested-desc':
+          return bInvested - aInvested;
+        case 'invested-asc':
+          return aInvested - bInvested;
+        case 'date-desc':
+          return new Date(b.purchaseDate) - new Date(a.purchaseDate);
+        case 'date-asc':
+          return new Date(a.purchaseDate) - new Date(b.purchaseDate);
+        default:
+          return 0;
+      }
+    });
+    
+    return filtered;
+  }, [allInvestments, searchTerm, filterType, sortBy]);
+  
+  const investments = processedInvestments;
+  const portfolioMetrics = calculatePortfolioMetrics(allInvestments);
 
   const handleAdd = async (investmentData) => {
     try {
@@ -117,6 +175,68 @@ export default function Dashboard() {
       setIsDeleting(false);
     }
   };
+  
+  const handleExportCSV = () => {
+    if (allInvestments.length === 0) {
+      showToast('No investments to export', 'error');
+      return;
+    }
+    
+    // CSV Headers
+    const headers = [
+      'Stock Symbol',
+      'Stock Name',
+      'Type',
+      'Purchase Date',
+      'Quantity',
+      'Purchase Price',
+      'Current Price',
+      'Invested Amount',
+      'Current Value',
+      'Profit/Loss',
+      'P/L %',
+      'Notes'
+    ];
+    
+    // CSV Rows
+    const rows = allInvestments.map(inv => {
+      const invested = inv.quantity * inv.purchasePrice;
+      const current = inv.quantity * inv.currentPrice;
+      const pl = current - invested;
+      const plPercent = (pl / invested) * 100;
+      
+      return [
+        inv.stockSymbol || '',
+        inv.stockName || '',
+        inv.type || '',
+        new Date(inv.purchaseDate).toLocaleDateString('en-IN'),
+        inv.quantity,
+        inv.purchasePrice,
+        inv.currentPrice,
+        invested.toFixed(2),
+        current.toFixed(2),
+        pl.toFixed(2),
+        plPercent.toFixed(2),
+        inv.notes || ''
+      ].map(field => `"${field}"`).join(',');
+    });
+    
+    // Combine headers and rows
+    const csv = [headers.join(','), ...rows].join('\n');
+    
+    // Create and download file
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `portfolio-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    showToast('Portfolio exported successfully!');
+  };
 
   if (error) {
     return (
@@ -171,7 +291,7 @@ export default function Dashboard() {
             <div className="loading-spinner"></div>
             <p>Loading investments...</p>
           </div>
-        ) : investments.length === 0 ? (
+        ) : allInvestments.length === 0 ? (
           <EmptyState onAddClick={() => setIsAddModalOpen(true)} />
         ) : (
           <>
@@ -196,19 +316,40 @@ export default function Dashboard() {
                 isPercentage
               />
             </section>
+            
+            <FilterSortBar
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              filterType={filterType}
+              onFilterChange={setFilterType}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              onExportCSV={handleExportCSV}
+            />
 
             <section className="investments-section">
-              <h2 className="section-title">Your Investments</h2>
-              <div className="investments-grid">
-                {investments.map((investment) => (
-                  <InvestmentCard
-                    key={investment._id}
-                    investment={investment}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </div>
+              <h2 className="section-title">
+                Your Investments 
+                {investments.length !== allInvestments.length && (
+                  <span className="filter-count"> ({investments.length} of {allInvestments.length})</span>
+                )}
+              </h2>
+              {investments.length === 0 ? (
+                <div className="no-results">
+                  <p>No investments match your filters.</p>
+                </div>
+              ) : (
+                <div className="investments-grid">
+                  {investments.map((investment) => (
+                    <InvestmentCard
+                      key={investment._id}
+                      investment={investment}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
           </>
         )}

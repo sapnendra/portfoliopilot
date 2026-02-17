@@ -7,13 +7,17 @@ A clean, modern web application for tracking stock and IPO investments. Built wi
 - **Landing Page** - Professional home page with hero section, feature highlights, and call-to-action
 - **Portfolio Dashboard** - View total invested, current value, profit/loss, and return percentage in INR
 - **Investment Tracking** - Add, edit, and delete investments with real-time updates
+- **Search & Filter** - Search investments by name/symbol and filter by type (Stock/IPO)
+- **Sort Options** - Sort by name, profit/loss, invested amount, or purchase date in ascending/descending order
+- **CSV Export** - Export all investments to CSV file for external analysis and record keeping
 - **Real-time Calculations** - Automatic P/L calculations for each investment and overall portfolio
 - **Dark/Light Mode** - Manual theme toggle with dark mode as default, preferences saved to localStorage
 - **Modern Icons** - Lucide React icons throughout the interface for a clean, professional look
-- **Custom Branding** - SVG logo with gradient design symbolizing portfolio growth
+- **Custom Branding** - SVG logo with gradient design symbolizing portfolio growth and favicon
 - **Indian Currency Support** - All amounts displayed in Indian Rupee (₹) format
 - **Responsive Design** - Mobile-first approach, works perfectly on all devices
 - **Clean UI** - Modern, professional interface with intuitive navigation
+- **Tailwind CSS Ready** - Configured with Tailwind CSS v4 for future styling enhancements
 
 ## 🛠️ Tech Stack
 
@@ -22,7 +26,7 @@ A clean, modern web application for tracking stock and IPO investments. Built wi
 - **Database**: MongoDB with Mongoose ODM
 - **Data Fetching**: SWR for real-time updates
 - **Icons**: Lucide React for modern, scalable icons
-- **Styling**: Custom CSS with CSS variables for theming
+- **Styling**: Custom CSS with CSS variables for theming + Tailwind CSS v4
 - **Theme Management**: React Context API with localStorage persistence
 
 ## 📁 Project Structure
@@ -43,6 +47,7 @@ portfoliopilot/
 │   ├── Logo.js                    # Custom SVG logo component
 │   ├── ThemeToggle.js             # Dark/light mode toggle button
 │   ├── ClientProviders.js         # Client-side provider wrapper
+│   ├── FilterSortBar.js           # Search, filter, sort, and export controls
 │   ├── MetricCard.js              # Portfolio metric display
 │   ├── InvestmentCard.js          # Individual investment card
 │   ├── AddInvestmentModal.js      # Add investment form
@@ -275,14 +280,44 @@ The app can be deployed to any platform that supports Next.js:
 
 Post-MVP features that could be added:
 
-- 📊 Charts and graphs (pie chart for allocation, bar chart for P/L)
-- 🌙 Dark mode toggle
-- 🔍 Search and filter investments
-- 📄 Export to CSV
-- 📈 Historical price tracking
-- 🔔 Price alerts
-- 💰 Dividend tracking
+- ✅ **Search and filter investments** - Implemented! Search by symbol/name, filter by type
+- ✅ **Sort functionality** - Implemented! Sort by name, P/L, invested amount, or date
+- ✅ **Export to CSV** - Implemented! Download complete portfolio data
+- ✅ **Dark mode toggle** - Implemented! Manual theme switching with persistence
+- 📊 Charts and graphs (pie chart for allocation, bar chart for P/L, line chart for historical P/L)
+- 📈 Historical price tracking with timeline view
+- 🔔 Price alerts and notifications
+- 💰 Dividend tracking and reinvestment calculations
+- 🌐 Multi-currency support beyond INR
 - 👤 User authentication for multi-user support
+- 📱 PWA support for mobile app-like experience
+- 🔄 Auto-sync with live stock prices via API integration
+
+## 📖 Using Advanced Features
+
+### Search & Filter
+1. Navigate to the dashboard at `/track`
+2. Use the search box to find investments by symbol or name
+3. Use the filter dropdown to show only Stocks or IPOs
+4. Filter results update in real-time
+
+### Sorting
+- Click the sort dropdown to organize investments by:
+  - **Name** (A-Z or Z-A)
+  - **Profit/Loss** (High to Low or Low to High)
+  - **Invested Amount** (High to Low or Low to High)
+  - **Purchase Date** (Newest or Oldest)
+
+### Export to CSV
+1. Click the "Export CSV" button in the filter bar
+2. A CSV file will download with all investment data
+3. File includes: symbols, types, dates, quantities, prices, P/L calculations
+4. Open in Excel, Google Sheets, or any spreadsheet app
+
+### Theme Toggle
+- Click the sun/moon icon in the header to switch themes
+- Your preference is automatically saved
+- Dark mode is the default theme
 
 ## 📄 License
 
