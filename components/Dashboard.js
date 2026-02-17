@@ -120,6 +120,18 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="dashboard">
+        <nav className="dashboard-nav">
+          <div className="container nav-container">
+            <div className="nav-brand">
+              <Logo size={36} />
+              <span className="brand-name">PortfolioPilot</span>
+            </div>
+            <div className="nav-actions">
+              <ThemeToggle />
+            </div>
+          </div>
+        </nav>
+        
         <div className="dashboard-container">
           <div className="error-container">
             <p>Failed to load investments. Please check your MongoDB connection.</p>
@@ -132,13 +144,13 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-container">
-        <header className="dashboard-header">
-          <div className="dashboard-logo">
+      <nav className="dashboard-nav">
+        <div className="container nav-container">
+          <div className="nav-brand">
             <Logo size={36} />
-            <h1 className="app-title">PortfolioPilot</h1>
+            <span className="brand-name">PortfolioPilot</span>
           </div>
-          <div className="dashboard-actions">
+          <div className="nav-actions">
             <ThemeToggle />
             <button 
               onClick={() => setIsAddModalOpen(true)} 
@@ -148,7 +160,10 @@ export default function Dashboard() {
               Add Investment
             </button>
           </div>
-        </header>
+        </div>
+      </nav>
+      
+      <div className="dashboard-container">
 
         {isLoading ? (
           <div className="loading-container">
