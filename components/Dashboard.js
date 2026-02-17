@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import useSWR from 'swr';
 import { Plus } from 'lucide-react';
 import Logo from './Logo';
@@ -122,10 +123,10 @@ export default function Dashboard() {
       <div className="dashboard">
         <nav className="dashboard-nav">
           <div className="container nav-container">
-            <div className="nav-brand">
+            <Link href="/" className="nav-brand">
               <Logo size={36} />
               <span className="brand-name">PortfolioPilot</span>
-            </div>
+            </Link>
             <div className="nav-actions">
               <ThemeToggle />
             </div>
@@ -146,18 +147,18 @@ export default function Dashboard() {
     <div className="dashboard">
       <nav className="dashboard-nav">
         <div className="container nav-container">
-          <div className="nav-brand">
+          <Link href="/" className="nav-brand">
             <Logo size={36} />
             <span className="brand-name">PortfolioPilot</span>
-          </div>
+          </Link>
           <div className="nav-actions">
             <ThemeToggle />
             <button 
               onClick={() => setIsAddModalOpen(true)} 
-              className="btn-primary"
+              className="btn-nav-action"
             >
               <Plus size={20} />
-              Add Investment
+              <span>Add Investment</span>
             </button>
           </div>
         </div>

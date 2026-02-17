@@ -11,10 +11,10 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="home-nav">
         <div className="container nav-container">
-          <div className="nav-brand">
+          <Link href="/" className="nav-brand">
             <Logo size={36} />
             <span className="brand-name">PortfolioPilot</span>
-          </div>
+          </Link>
           <div className="nav-actions">
             <ThemeToggle />
             <Link href="/track" className="btn-nav">

@@ -159,6 +159,12 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.nav-brand:hover {
+  opacity: 0.8;
 }
 
 .brand-name {
@@ -199,6 +205,36 @@ body {
   }
 }
 
+.btn-nav-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-nav-action:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 639px) {
+  .btn-nav-action span {
+    display: none;
+  }
+  
+  .btn-nav-action {
+    padding: var(--space-2);
+  }
+}
+
 /* Hero Section */
 .hero {
   position: relative;
@@ -221,6 +257,8 @@ body {
 }
 
 .hero-container {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-12);
