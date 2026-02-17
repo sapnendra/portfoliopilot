@@ -119,78 +119,84 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="error-container">
-        <p>Failed to load investments. Please check your MongoDB connection.</p>
-        <p className="error-detail">{error.message}</p>
+      <div className="dashboard">
+        <div className="dashboard-container">
+          <div className="error-container">
+            <p>Failed to load investments. Please check your MongoDB connection.</p>
+            <p className="error-detail">{error.message}</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="dashboard-logo">
-          <Logo size={36} />
-          <h1 className="app-title">PortfolioPilot</h1>
-        </div>
-        <div className="dashboard-actions">
-          <ThemeToggle />
-          <button 
-            onClick={() => setIsAddModalOpen(true)} 
-            className="btn-primary"
-          >
-            <Plus size={20} />
-            Add Investment
-          </button>
-        </div>
-      </header>
+      <div className="dashboard-container">
+        <header className="dashboard-header">
+          <div className="dashboard-logo">
+            <Logo size={36} />
+            <h1 className="app-title">PortfolioPilot</h1>
+          </div>
+          <div className="dashboard-actions">
+            <ThemeToggle />
+            <button 
+              onClick={() => setIsAddModalOpen(true)} 
+              className="btn-primary"
+            >
+              <Plus size={20} />
+              Add Investment
+            </button>
+          </div>
+        </header>
 
-      {isLoading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading investments...</p>
-        </div>
-      ) : investments.length === 0 ? (
-        <EmptyState onAddClick={() => setIsAddModalOpen(true)} />
-      ) : (
-        <>
-          <section className="metrics-section">
-            <MetricCard 
-              label="Total Invested" 
-              value={formatCurrency(portfolioMetrics.totalInvested)} 
-            />
-            <MetricCard 
-              label="Current Value" 
-              value={formatCurrency(portfolioMetrics.totalCurrentValue)} 
-            />
-            <MetricCard 
-              label="Total P/L" 
-              value={formatCurrency(portfolioMetrics.portfolioProfit)}
-              isPositive={portfolioMetrics.portfolioProfit >= 0}
-            />
-            <MetricCard 
-              label="Return %" 
-              value={formatPercent(portfolioMetrics.portfolioPercent)}
-              isPositive={portfolioMetrics.portfolioPercent >= 0}
-              isPercentage
-            />
-          </section>
+        {isLoading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading investments...</p>
+          </div>
+        ) : investments.length === 0 ? (
+          <EmptyState onAddClick={() => setIsAddModalOpen(true)} />
+        ) : (
+          <>
+            <section className="metrics-section">
+              <MetricCard 
+                label="Total Invested" 
+                value={formatCurrency(portfolioMetrics.totalInvested)} 
+              />
+              <MetricCard 
+                label="Current Value" 
+                value={formatCurrency(portfolioMetrics.totalCurrentValue)} 
+              />
+              <MetricCard 
+                label="Total P/L" 
+                value={formatCurrency(portfolioMetrics.portfolioProfit)}
+                isPositive={portfolioMetrics.portfolioProfit >= 0}
+              />
+              <MetricCard 
+                label="Return %" 
+                value={formatPercent(portfolioMetrics.portfolioPercent)}
+                isPositive={portfolioMetrics.portfolioPercent >= 0}
+                isPercentage
+              />
+            </section>
 
-          <section className="investments-section">
-            <h2 className="section-title">Your Investments</h2>
-            <div className="investments-grid">
-              {investments.map((investment) => (
-                <InvestmentCard
-                  key={investment._id}
-                  investment={investment}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+            <section className="investments-section">
+              <h2 className="section-title">Your Investments</h2>
+              <div className="investments-grid">
+                {investments.map((investment) => (
+                  <InvestmentCard
+                    key={investment._id}
+                    investment={investment}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </div>
+            </section>
+          </>
+        )}
+      </div>
 
       <AddInvestmentModal
         isOpen={isAddModalOpen}
